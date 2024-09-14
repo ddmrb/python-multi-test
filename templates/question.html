@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Question {{ index + 1 }}</title>
+    <style>
+        .correct {
+            background-color: lightgreen;
+        }
+        .incorrect {
+            background-color: lightcoral;
+        }
+    </style>
+</head>
+<body>
+    <h2>Question {{ index + 1 }}</h2>
+    <form method="post">
+        <p>{{ question['question'] }}</p>
+        
+        <!-- Display each answer with conditional styling based on submission -->
+        <label class="{% if submitted and selected_answer == question['answera'] %}{{ 'correct' if selected_answer == question['actual_answer'] else 'incorrect' }}{% elif submitted and question['actual_answer'] == question['answera'] %}correct{% endif %}">
+            <input type="radio" name="answer" value="{{ question['answera'] }}" {% if submitted %}disabled{% endif %}> A. {{ question['answera'] }}
+        </label><br>
+        
+        <label class="{% if submitted and selected_answer == question['answerb'] %}{{ 'correct' if selected_answer == question['actual_answer'] else 'incorrect' }}{% elif submitted and question['actual_answer'] == question['answerb'] %}correct{% endif %}">
+            <input type="radio" name="answer" value="{{ question['answerb'] }}" {% if submitted %}disabled{% endif %}> B. {{ question['answerb'] }}
+        </label><br>
+        
+        <label class="{% if submitted and selected_answer == question['answerc'] %}{{ 'correct' if selected_answer == question['actual_answer'] else 'incorrect' }}{% elif submitted and question['actual_answer'] == question['answerc'] %}correct{% endif %}">
+            <input type="radio" name="answer" value="{{ question['answerc'] }}" {% if submitted %}disabled{% endif %}> C. {{ question['answerc'] }}
+        </label><br>
+        
+        <label class="{% if submitted and selected_answer == question['answerd'] %}{{ 'correct' if selected_answer == question['actual_answer'] else 'incorrect' }}{% elif submitted and question['actual_answer'] == question['answerd'] %}correct{% endif %}">
+            <input type="radio" name="answer" value="{{ question['answerd'] }}" {% if submitted %}disabled{% endif %}> D. {{ question['answerd'] }}
+        </label><br>
+
+        <!-- Submit button: Only show if the answer has not been submitted yet -->
+        {% if not submitted %}
+            <button type="submit">Submit</button>
+        {% endif %}
+    </form>
+
+    <!-- Show the answer details and Next button after submission -->
+    {% if submitted %}
+        <h3>Answer Details</h3>
+        <p><strong>Selected Answer:</strong> {{ selected_answer }}</p>
+        <p><strong>Correct Answer:</strong> {{ question['actual_answer'] }}</p>
+        <p><strong>Book:</strong> {{ question['book'] }}</p>
+        <p><strong>Regulation Table:</strong> {{ question['regulation_table'] }}</p>
+
+        <!-- Next button to move to the next question -->
+        <form action="{{ url_for('question', index=index + 1) }}" method="get">
+            <button type="submit">Next</button>
+        </form>
+    {% endif %}
+</body>
+</html>

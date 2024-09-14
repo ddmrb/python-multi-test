@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Loader</title>
+</head>
+<body>
+    <h1>Select a Test</h1>
+    <form method="post">
+        <label for="file_name">Choose a CSV file:</label>
+        <select id="file_name" name="file_name" required>
+            {% for file in csv_files %}
+                <option value="{{ file }}">{{ file }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Load Test</button>
+    </form>
+</body>
+</html>
