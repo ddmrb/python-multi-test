@@ -24,6 +24,7 @@ def load_test():
                 incorrect_questions.clear()
                 user_answers.clear()
                 current_question = 0
+                root.title(f"Test Loader - {file_path}")
                 show_question(current_question)
         except Exception as e:
             messagebox.showerror("Error", f"Failed to load CSV file: {str(e)}")
@@ -130,7 +131,7 @@ def review_incorrect_questions():
 
 # Function to set up the GUI
 def setup_gui():
-    global frame
+    global root, frame
 
     root = tk.Tk()
     root.title("Test Loader")

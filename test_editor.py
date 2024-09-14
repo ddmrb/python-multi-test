@@ -23,6 +23,7 @@ def load_test():
                 questions.clear()
                 questions.extend([row for row in reader])
             current_question = 0
+            root.title(f"Test Editor - {file_path}")
             show_question(current_question)
         except Exception as e:
             messagebox.showerror("Error", f"Failed to load CSV file: {str(e)}")
@@ -80,33 +81,33 @@ def show_question(index):
 
     # Editable fields for question and answers
     tk.Label(frame, text="Question", font=("Arial", 14)).pack(anchor='w')
-    question_entry = tk.Entry(frame, width=100)
+    question_entry = tk.Entry(frame, width=150)
     question_entry.insert(0, question_data['question'])
     question_entry.pack(pady=5)
 
     tk.Label(frame, text="Answer A", font=("Arial", 12)).pack(anchor='w')
-    answera_entry = tk.Entry(frame, width=50)
+    answera_entry = tk.Entry(frame, width=150)
     answera_entry.insert(0, question_data['answera'])
     answera_entry.pack(pady=5)
 
     tk.Label(frame, text="Answer B", font=("Arial", 12)).pack(anchor='w')
-    answerb_entry = tk.Entry(frame, width=50)
+    answerb_entry = tk.Entry(frame, width=150)
     answerb_entry.insert(0, question_data['answerb'])
     answerb_entry.pack(pady=5)
 
     tk.Label(frame, text="Answer C", font=("Arial", 12)).pack(anchor='w')
-    answerc_entry = tk.Entry(frame, width=50)
+    answerc_entry = tk.Entry(frame, width=150)
     answerc_entry.insert(0, question_data['answerc'])
     answerc_entry.pack(pady=5)
 
     tk.Label(frame, text="Answer D", font=("Arial", 12)).pack(anchor='w')
-    answerd_entry = tk.Entry(frame, width=50)
+    answerd_entry = tk.Entry(frame, width=150)
     answerd_entry.insert(0, question_data['answerd'])
     answerd_entry.pack(pady=5)
 
     # Create radio buttons for selecting actual answer and show actual_answer text field
     answer_var = tk.StringVar()
-    actual_answer_entry = tk.Entry(frame, width=50)
+    actual_answer_entry = tk.Entry(frame, width=150)
     actual_answer_entry.insert(0, question_data['actual_answer'])
 
     def update_actual_answer():
@@ -142,17 +143,17 @@ def show_question(index):
 
     # Editable fields for hidden fields: book, regulation_table, image
     tk.Label(frame, text="Book", font=("Arial", 12)).pack(anchor='w')
-    book_entry = tk.Entry(frame, width=50)
+    book_entry = tk.Entry(frame, width=150)
     book_entry.insert(0, question_data['book'])
     book_entry.pack(pady=5)
 
     tk.Label(frame, text="Regulation Table", font=("Arial", 12)).pack(anchor='w')
-    regulation_table_entry = tk.Entry(frame, width=50)
+    regulation_table_entry = tk.Entry(frame, width=150)
     regulation_table_entry.insert(0, question_data['regulation_table'])
     regulation_table_entry.pack(pady=5)
 
     tk.Label(frame, text="Image", font=("Arial", 12)).pack(anchor='w')
-    image_entry = tk.Entry(frame, width=50)
+    image_entry = tk.Entry(frame, width=150)
     image_entry.insert(0, question_data['image'])
     image_entry.pack(pady=5)
 
@@ -221,7 +222,7 @@ def add_new_question():
 
 # Function to set up the GUI
 def setup_gui():
-    global frame
+    global root, frame
 
     root = tk.Tk()
     root.title("Test Editor")
