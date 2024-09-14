@@ -13,6 +13,12 @@
 </head>
 <body>
     <h2>Question {{ index + 1 }}</h2>
+    
+    <!-- Display the image if the "image" field is defined -->
+    {% if question['image'] %}
+        <img src="{{ url_for('static', filename='images/' + question['image']) }}" alt="Question Image" style="max-width: 350px; max-height: 350px;">
+    {% endif %}
+
     <form method="post">
         <p>{{ question['question'] }}</p>
         

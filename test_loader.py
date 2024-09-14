@@ -1,3 +1,4 @@
+import os
 import csv
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
@@ -10,6 +11,8 @@ correct_answers = 0
 incorrect_questions = []
 user_answers = []
 image_label = None  # Store the image label globally
+# Define the relative path to the images directory
+IMAGE_DIR = os.path.join(os.path.dirname(__file__), 'static', 'images')
 
 # Function to load the CSV file
 def load_test():
@@ -47,22 +50,27 @@ def show_question(index):
     question_number = f"Q{index + 1}. {question_data['question']}"
 
     # Show the image if the "image" field is defined
-    image_path = question_data.get('image', '').strip()
-    if image_path:
-        try:
-            img = Image.open(image_path)
-            original_width, original_height = img.size
-            max_size = 350
-            if original_width > max_size or original_height > max_size:
-                scaling_factor = min(max_size / original_width, max_size / original_height)
-                new_size = (int(original_width * scaling_factor), int(original_height * scaling_factor))
-                img = img.resize(new_size, Image.ANTIALIAS)
-            img = ImageTk.PhotoImage(img)
-            image_label = tk.Label(frame, image=img, bg='white')
-            image_label.image = img  # Keep a reference to the image
-            image_label.pack(pady=10)
-        except Exception as e:
-            messagebox.showerror("Error", f"Failed to load image: {str(e)}")
+    image_filename = question_data.get('image', '').strip()
+    if image_filename:
+        # Construct the full path using the images folder
+        image_path = os.path.join(IMAGE_DIR, image_filename)
+        if os.path.exists(image_path):
+            try:
+                img = Image.open(image_path)
+                original_width, original_height = img.size
+                max_size = 350
+                if original_width > max_size or original_height > max_size:
+                    scaling_factor = min(max_size / original_width, max_size / original_height)
+                    new_size = (int(original_width * scaling_factor), int(original_height * scaling_factor))
+                    img = img.resize(new_size, Image.ANTIALIAS)
+                img = ImageTk.PhotoImage(img)
+                image_label = tk.Label(frame, image=img, bg='white')
+                image_label.image = img  # Keep a reference to the image
+                image_label.pack(pady=10)
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to load image: {str(e)}")
+        else:
+            messagebox.showerror("Error", f"Image not found in directory: {image_path}")
 
     # Show the question
     question_label = tk.Label(frame, text=question_number, wraplength=700, bg='white', font=("Arial", 14))
@@ -81,7 +89,6 @@ def show_question(index):
     # Create an OK button to move to the next question
     ok_button = ttk.Button(frame, text="OK", command=lambda: check_answer(index, answer_var.get()))
     ok_button.pack(pady=20)
-
 
 # Function to check the answer
 def check_answer(index, selected_answer):
@@ -102,7 +109,6 @@ def check_answer(index, selected_answer):
 
     # Move to the next question
     show_question(index + 1)
-
 
 # Function to show the summary after the last question
 def show_summary():

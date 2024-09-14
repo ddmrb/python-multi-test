@@ -8,7 +8,7 @@ import os
 questions = []
 current_question = 0
 image_label = None  # Store the image label globally
-image_folder = os.path.join(os.path.dirname(__file__), 'images')
+image_folder = os.path.join(os.path.dirname(__file__), 'static', 'images')
 csv_file_path = ""  # To keep track of the CSV file path
 
 # Function to load the CSV file
@@ -62,25 +62,30 @@ def show_question(index):
     question_data = questions[index]
 
     # Show the image if the "image" field is defined
-    image_path = question_data.get('image', '').strip()
-    if image_path:
-        try:
-            img = Image.open(image_path)
-            original_width, original_height = img.size
-            max_size = 350
-            if original_width > max_size or original_height > max_size:
-                scaling_factor = min(max_size / original_width, max_size / original_height)
-                new_size = (int(original_width * scaling_factor), int(original_height * scaling_factor))
-                img = img.resize(new_size, Image.ANTIALIAS)
-            img = ImageTk.PhotoImage(img)
-            image_label = tk.Label(frame, image=img, bg='white')
-            image_label.image = img  # Keep a reference to the image
-            image_label.pack(pady=10)
-        except Exception as e:
-            messagebox.showerror("Error", f"Failed to load image: {str(e)}")
+    image_filename = question_data.get('image', '').strip()
+    if image_filename:
+        # Construct the full path using the images folder
+        image_path = os.path.join(image_folder, image_filename)
+        if os.path.exists(image_path):
+            try:
+                img = Image.open(image_path)
+                original_width, original_height = img.size
+                max_size = 350
+                if original_width > max_size or original_height > max_size:
+                    scaling_factor = min(max_size / original_width, max_size / original_height)
+                    new_size = (int(original_width * scaling_factor), int(original_height * scaling_factor))
+                    img = img.resize(new_size, Image.ANTIALIAS)
+                img = ImageTk.PhotoImage(img)
+                image_label = tk.Label(frame, image=img, bg='white')
+                image_label.image = img  # Keep a reference to the image
+                image_label.pack(pady=10)
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to load image: {str(e)}")
+        else:
+            messagebox.showerror("Error", f"Image not found: {image_path}")
 
     # Editable fields for question and answers
-    tk.Label(frame, text="Question", font=("Arial", 14)).pack(anchor='w')
+    tk.Label(frame, text=f"Question {index + 1}", font=("Arial", 14)).pack(anchor='w')  # Add index number to label
     question_entry = tk.Entry(frame, width=150)
     question_entry.insert(0, question_data['question'])
     question_entry.pack(pady=5)
@@ -160,8 +165,10 @@ def show_question(index):
     def open_image():
         img_file = filedialog.askopenfilename(initialdir=image_folder, title="Select Image", filetypes=[("Image files", "*.jpg;*.png;*.gif")])
         if img_file:
+            # Get only the file name, not the full path
+            image_filename = os.path.basename(img_file)
             image_entry.delete(0, tk.END)
-            image_entry.insert(0, img_file)
+            image_entry.insert(0, image_filename)
 
     tk.Button(frame, text="Open Image", command=open_image).pack(pady=5)
 
