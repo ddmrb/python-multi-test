@@ -9,6 +9,10 @@
         .incorrect {
             background-color: lightcoral;
         }
+        .answer-image {
+            max-width: 300px;
+            max-height: 300px;
+        }
     </style>
 </head>
 <body>
@@ -51,7 +55,19 @@
         <p><strong>Selected Answer:</strong> {{ selected_answer }}</p>
         <p><strong>Correct Answer:</strong> {{ question['actual_answer'] }}</p>
         <p><strong>Book:</strong> {{ question['book'] }}</p>
-        <p><strong>Regulation Table:</strong> {{ question['regulation_table'] }}</p>
+
+        <!-- Check for image placeholder in the regulation_table and render the image if found -->
+        <p><strong>Regulation Table:</strong> 
+            {% if '{{' in question['regulation_table'] and '}}' in question['regulation_table'] %}
+                {% set start_idx = question['regulation_table'].find('{{') + 2 %}
+                {% set end_idx = question['regulation_table'].find('}}') %}
+                {% set image_name = question['regulation_table'][start_idx:end_idx].strip() %}
+                <img src="{{ url_for('static', filename='images/' + image_name) }}" alt="Regulation Image" class="answer-image"><br>
+                {{ question['regulation_table'][:start_idx - 2] + question['regulation_table'][end_idx + 2:] }}
+            {% else %}
+                {{ question['regulation_table'] }}
+            {% endif %}
+        </p>
 
         <!-- Next button to move to the next question -->
         <form action="{{ url_for('question', index=index + 1) }}" method="get">
