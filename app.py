@@ -19,31 +19,9 @@ def load_test(file_name):
     global questions, correct_answers, incorrect_questions, current_question_index, submitted_answer
     file_path = os.path.join(TESTS_DIR, file_name)
     try:
-        # Step 1: Attempt to detect encoding using chardet
-        with open(file_path, 'rb') as f:
-            raw_data = f.read()
-            result = chardet.detect(raw_data)
-            encoding = result['encoding'] if result['confidence'] > 0.5 else 'utf-8'
-        
-        # Step 2: Attempt to read the CSV file with detected encoding
-        try:
-            with open(file_path, newline='', encoding=encoding) as csvfile:
-                reader = csv.DictReader(csvfile)
-                questions = [row for row in reader]
-        except UnicodeDecodeError:
-            print(f"Failed to read with detected encoding '{encoding}'. Trying 'utf-8' and 'mbcs'...")
-            # Fallback to UTF-8 if detected encoding fails
-            try:
-                with open(file_path, newline='', encoding='utf-8') as csvfile:
-                    reader = csv.DictReader(csvfile)
-                    questions = [row for row in reader]
-            except UnicodeDecodeError:
-                # Fallback to ANSI ('mbcs' on Windows) if UTF-8 fails
-                with open(file_path, newline='', encoding='mbcs') as csvfile:
-                    reader = csv.DictReader(csvfile)
-                    questions = [row for row in reader]
-
-        # Reset other variables
+        with open(file_path, newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            questions = [row for row in reader]
         correct_answers = 0
         incorrect_questions.clear()
         current_question_index = 0
